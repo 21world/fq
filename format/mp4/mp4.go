@@ -18,6 +18,8 @@ package mp4
 import (
 	"embed"
 	"fmt"
+	"log"
+	"strings"
 
 	"github.com/wader/fq/format"
 	"github.com/wader/fq/internal/cmpex"
@@ -63,6 +65,7 @@ func init() {
 			Groups: []*decode.Group{
 				format.Probe,
 				format.Image, // avif
+				format.Content_Type,
 			},
 			DecodeFn: mp4Decode,
 			DefaultInArg: format.MP4_In{
@@ -452,6 +455,13 @@ func mp4Tracks(d *decode.D, ctx *decodeContext) {
 func mp4Decode(d *decode.D) any {
 	var mi format.MP4_In
 	d.ArgAs(&mi)
+
+	log.Printf("mp4 in: %#+v\n", mi)
+
+	var cti format.Content_Type_In
+	if d.ArgAs(&cti) && !strings.HasSuffix(cti.ContentType, "/mp4") {
+		d.Fatalf("content-type not */mp4")
+	}
 
 	ctx := &decodeContext{
 		opts:   mi,

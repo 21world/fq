@@ -53,6 +53,7 @@ var (
 	TCP_Stream     = &decode.Group{Name: "tcp_stream", DefaultInArg: TCP_Stream_In{}}   // ex: http
 	UDP_Payload    = &decode.Group{Name: "udp_payload", DefaultInArg: UDP_Payload_In{}} // ex: dns
 	MP3_Frame_Tags = &decode.Group{Name: "mp3_frame_tags"}
+	Content_Type   = &decode.Group{Name: "content_type", DefaultInArg: Content_Type_In{}}
 
 	Bytes = &decode.Group{Name: "bytes"}
 	Bits  = &decode.Group{Name: "bits"}
@@ -114,6 +115,8 @@ var (
 	HEVC_SPS            = &decode.Group{Name: "hevc_sps"}
 	HEVC_VPS            = &decode.Group{Name: "hevc_vps"}
 	HTML                = &decode.Group{Name: "html"}
+	HTTP                = &decode.Group{Name: "http"}
+	HTTP_Chunked        = &decode.Group{Name: "http_chunked"}
 	ICC_Profile         = &decode.Group{Name: "icc_profile"}
 	ICMP                = &decode.Group{Name: "icmp"}
 	ICMPv6              = &decode.Group{Name: "icmpv6"}
@@ -133,6 +136,7 @@ var (
 	MachO_Fat           = &decode.Group{Name: "macho_fat"}
 	Markdown            = &decode.Group{Name: "markdown"}
 	Matroska            = &decode.Group{Name: "matroska"}
+	MIME_Multi_Part     = &decode.Group{Name: "mime_multipart"}
 	MOC3                = &decode.Group{Name: "moc3"}
 	MP3                 = &decode.Group{Name: "mp3"}
 	MP3_Frame           = &decode.Group{Name: "mp3_frame"}
@@ -141,10 +145,10 @@ var (
 	MP4                 = &decode.Group{Name: "mp4"}
 	MPEG_ASC            = &decode.Group{Name: "mpeg_asc"}
 	MPEG_ES             = &decode.Group{Name: "mpeg_es"}
-	MPES_PES            = &decode.Group{Name: "mpeg_pes"}
 	MPEG_PES_Packet     = &decode.Group{Name: "mpeg_pes_packet"}
 	MPEG_SPU            = &decode.Group{Name: "mpeg_spu"}
 	MPEG_TS             = &decode.Group{Name: "mpeg_ts"}
+	MPES_PES            = &decode.Group{Name: "mpeg_pes"}
 	MsgPack             = &decode.Group{Name: "msgpack"}
 	Ogg                 = &decode.Group{Name: "ogg"}
 	Ogg_Page            = &decode.Group{Name: "ogg_page"}
@@ -164,6 +168,7 @@ var (
 	SLL2_Packet         = &decode.Group{Name: "sll2_packet"}
 	TAR                 = &decode.Group{Name: "tar"}
 	TCP_Segment         = &decode.Group{Name: "tcp_segment"}
+	TextProto           = &decode.Group{Name: "textproto"}
 	TIFF                = &decode.Group{Name: "tiff"}
 	TLS                 = &decode.Group{Name: "tls"}
 	TOML                = &decode.Group{Name: "toml"}
@@ -359,6 +364,9 @@ type AVI_In struct {
 	DecodeExtendedChunks bool `doc:"Decode extended chunks"`
 }
 
+type Bitcoin_Block_In struct {
+	HasHeader bool `doc:"Has blkdat header"`
+}
 type Zip_In struct {
 	Uncompress bool `doc:"Uncompress and probe files"`
 }
@@ -380,8 +388,32 @@ type CSV_In struct {
 	Comment string `doc:"Comment line character"`
 }
 
-type Bitcoin_Block_In struct {
-	HasHeader bool `doc:"Has blkdat header"`
+type Mime_Multipart_In struct {
+	Boundary string `doc:"Part boundary"`
+}
+
+type TextProto_In struct {
+	Name string `doc:"Name of key/value"`
+}
+
+type TextProto_Out struct {
+	Pairs map[string][]string
+}
+
+type Content_Type_In struct {
+	ContentType string
+	Pairs       map[string]string
+}
+
+type Http_Chunked_In struct {
+	ContentEncoding string
+	ContentType     string
+	Pairs           map[string]string
+}
+
+type Gzip_In struct {
+	ContentType string
+	Pairs       map[string]string
 }
 
 type TLS_In struct {
